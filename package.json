@@ -1,0 +1,20 @@
+{
+  "name": "farm-fresh",
+  "version": "1.0.0",
+  "description": "B2B2C marketplace connecting rural farmers directly with bulk buyers to eliminate middle-men",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev:server": "npm run dev --workspace=server",
+    "dev:client": "npm run dev --workspace=client",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "build:client": "npm run build --workspace=client",
+    "start:server": "npm run start --workspace=server"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
