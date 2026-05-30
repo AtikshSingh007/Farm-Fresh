@@ -1,8 +1,20 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import FarmerDashboard from './pages/FarmerDashboard';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import { useAuth } from './hooks/useAuth';
+
+// PrivateRoute component to protect dashboard
+const PrivateRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+  
+  if (loading) return <div>Loading...</div>;
+  
+  return user ? children : <Navigate to="/login" />;
+};
 
 function App() {
   return (
@@ -12,8 +24,9 @@ function App() {
           <Navbar />
           <main className="flex-grow">
             <Routes>
-              <Route path="/" element={<FarmerDashboard />} />
-              {/* Add login/register routes later in Commit 5 integration */}
+              <Route path="/" element={<PrivateRoute><FarmerDashboard /></PrivateRoute>} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
             </Routes>
           </main>
         </div>

@@ -1,12 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Package, TrendingUp, DollarSign, PlusCircle } from 'lucide-react';
 import AlertBanner from '../components/AlertBanner';
+import { fetchApi } from '../utils/api';
+import { useAuth } from '../hooks/useAuth';
 
 const FarmerDashboard = () => {
-  const [activeListings, setActiveListings] = useState([
-    { id: 1, cropName: 'Tomatoes', quantity: 50, unit: 'kg', price: 15, status: 'available' },
-    { id: 2, cropName: 'Onions', quantity: 100, unit: 'quintals', price: 1200, status: 'pooling' }
-  ]);
+  const [activeListings, setActiveListings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const loadListings = async () => {
+      try {
+        const response = await fetchApi('/listings');
+        // Filter out only this farmer's listings since the backend doesn't have a specific /farmer endpoint yet
+        const mySales = response.data.filter(item => item.farmerId && item.farmerId.id === user.id);
+        setActiveListings(mySales);
+      } catch (error) {
+        console.error('Failed to load listings', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    if (user) {
+      loadListings();
+    }
+  }, [user]);
 
   // Simulating a condition where market price falls below minimum
   const marketPrices = {
@@ -14,8 +34,10 @@ const FarmerDashboard = () => {
   };
 
   const isDistressSale = activeListings.some(listing => 
-    marketPrices[listing.cropName] && marketPrices[listing.cropName] < listing.price
+    marketPrices[listing.cropName] && marketPrices[listing.cropName] < listing.minimumPricePerKg
   );
+
+  if (loading) return <div className="text-center py-10">Loading dashboard...</div>;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -89,8 +111,8 @@ const FarmerDashboard = () => {
               {activeListings.map((item) => (
                 <tr key={item.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{item.cropName}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{item.quantity} {item.unit}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">₹{item.price}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{item.quantityAvailable} {item.unit}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">₹{item.minimumPricePerKg}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       item.status === 'available' ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'
