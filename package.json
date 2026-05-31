@@ -15,6 +15,9 @@
     "start:server": "npm run start --workspace=server"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@vitejs/plugin-react": "^6.0.2",
+    "concurrently": "^8.2.2",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
   }
 }

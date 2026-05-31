@@ -28,12 +28,11 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      // Mocking coordinates for simplicity in registration
       const payload = {
         ...formData,
         location: {
           type: 'Point',
-          coordinates: [78.9629, 20.5937], // Default to center of India
+          coordinates: [78.9629, 20.5937],
           address: formData.address,
         }
       };
@@ -66,7 +65,7 @@ const Register = () => {
         <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
           
           <div>
-            <label-[HTML removed] className="block text-sm font-medium text-slate-700">Full Name</label>
+            <label className="block text-sm font-medium text-slate-700">Full Name</label>
             <input
               name="name"
               type="text"
@@ -78,7 +77,7 @@ const Register = () => {
           </div>
 
           <div>
-            <label-[HTML removed] className="block text-sm font-medium text-slate-700">Phone Number</label>
+            <label className="block text-sm font-medium text-slate-700">Phone Number</label>
             <input
               name="phone"
               type="text"
@@ -90,7 +89,7 @@ const Register = () => {
           </div>
 
           <div>
-            <label-[HTML removed] className="block text-sm font-medium text-slate-700">Password</label>
+            <label className="block text-sm font-medium text-slate-700">Password</label>
             <input
               name="password"
               type="password"
@@ -102,7 +101,7 @@ const Register = () => {
           </div>
 
           <div>
-            <label-[HTML removed] className="block text-sm font-medium text-slate-700">Role</label>
+            <label className="block text-sm font-medium text-slate-700">Role</label>
             <select
               name="role"
               className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm"
@@ -115,7 +114,7 @@ const Register = () => {
           </div>
 
           <div>
-            <label-[HTML removed] className="block text-sm font-medium text-slate-700">Address / Location</label>
+            <label className="block text-sm font-medium text-slate-700">Address / Location</label>
             <input
               name="address"
               type="text"

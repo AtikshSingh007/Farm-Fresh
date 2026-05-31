@@ -47,7 +47,7 @@ const Login = () => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
-              <label-[HTML removed] htmlFor="phone-address" className="sr-only">Phone Number</label>
+              <label htmlFor="phone-address" className="sr-only">Phone Number</label>
               <input
                 id="phone-address"
                 name="phone"
@@ -60,7 +60,7 @@ const Login = () => {
               />
             </div>
             <div>
-              <label-[HTML removed] htmlFor="password" className="sr-only">Password</label>
+              <label htmlFor="password" className="sr-only">Password</label>
               <input
                 id="password"
                 name="password"
