@@ -15,6 +15,12 @@ export const errorHandler = (err, req, res, next) => {
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   let message = err.message;
 
+  // Handle MongoDB connection/buffering timeout errors
+  if (err.message && (err.message.includes('buffering timed out') || err.message.includes('ECONNREFUSED'))) {
+    statusCode = 503;
+    message = '❌ Database not connected. Please set up MongoDB to use authentication features. See MONGODB_ATLAS_SETUP.md for setup instructions (5 minutes, FREE).';
+  }
+
   // Handle Mongoose CastError (e.g., invalid ObjectId)
   if (err.name === 'CastError' && err.kind === 'ObjectId') {
     statusCode = 400;
