@@ -1,53 +1,53 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-// Protect routes - Verify JWT and attach user
+/**
+ * protect — verifies the JWT from the Authorization header
+ * and attaches the user document (sans password) to req.user.
+ */
 export const protect = async (req, res, next) => {
-  let token;
+  const authHeader = req.headers.authorization;
 
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
-    try {
-      // Get token from header
-      token = req.headers.authorization.split(' ')[1];
-
-      // Verify token
-      const decoded = jwt.verify(
-        token,
-        process.env.JWT_SECRET || 'super_secret_jwt_passkey_change_in_production'
-      );
-
-      // Get user from the token
-      req.user = await User.findById(decoded.id).select('-password');
-
-      if (!req.user) {
-        res.status(401);
-        throw new Error('Not authorized, user not found');
-      }
-
-      next();
-    } catch (error) {
-      console.error(error);
-      res.status(401);
-      next(new Error('Not authorized, token failed'));
-    }
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401);
+    return next(new Error('Not authorized — no token provided.'));
   }
 
-  if (!token) {
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || 'farm_fresh_super_secret_key_change_in_production_2024'
+    );
+
+    // Attach user to request (password excluded via select:false on schema)
+    req.user = await User.findById(decoded.id);
+
+    if (!req.user) {
+      res.status(401);
+      return next(new Error('Not authorized — user no longer exists.'));
+    }
+
+    next();
+  } catch (err) {
     res.status(401);
-    next(new Error('Not authorized, no token'));
+    next(new Error('Not authorized — token invalid or expired.'));
   }
 };
 
-// Authorize roles
+/**
+ * authorize — role-based access control middleware.
+ * Usage: authorize('farmer'), authorize('admin', 'farmer')
+ */
 export const authorize = (...roles) => {
   return (req, res, next) => {
     if (!req.user || !roles.includes(req.user.role)) {
       res.status(403);
       return next(
-        new Error(`User role '${req.user ? req.user.role : 'unknown'}' is not authorized to access this route`)
+        new Error(
+          `Access denied — role '${req.user?.role ?? 'unknown'}' cannot access this resource.`
+        )
       );
     }
     next();
