@@ -1,4 +1,5 @@
-const API_URL = '/api';
+// Use environment variable for API URL, with fallback to Vite proxy
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Interceptor wrapper for fetch to attach tokens
 export const fetchApi = async (endpoint, options = {}) => {
