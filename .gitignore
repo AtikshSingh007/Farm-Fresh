@@ -51,3 +51,4 @@ yarn-error.log*
 # Temporary documentation files (keep these out of repo)
 GIT_HISTORY_SUMMARY.md
 .deployment-checklist.md
+DEPLOYMENT_READY.md
