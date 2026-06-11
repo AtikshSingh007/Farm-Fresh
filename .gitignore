@@ -47,3 +47,7 @@ yarn-error.log*
 
 # Kiro AI spec files
 .kiro/
+
+# Temporary documentation files (keep these out of repo)
+GIT_HISTORY_SUMMARY.md
+.deployment-checklist.md
