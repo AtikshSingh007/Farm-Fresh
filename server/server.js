@@ -17,9 +17,10 @@ const app = express();
 
 // Standard Middlewares
 app.use(cors({
-  origin: '*', // Allow all origins for initial API requests, specify domain in prod
+  origin: process.env.CORS_ORIGIN || '*', // Specific origin in production
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
